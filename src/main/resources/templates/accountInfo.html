@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title>EC's Wiki</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<nav class="navbar navbar-inverse">
+	 		<div class="container-fluid">
+		   		<div class="navbar-header">
+					<a class="navbar-brand" th:href="@{/home}">EC's Wiki</a>
+				</div>
+				<ul sec:authorize="isAuthenticated()" class="nav navbar-nav">
+					<li class="inactive"><a th:href="@{/home}">Home</a></li>
+					<li class="inactive"><a th:href="@{/documents}">Documents</a></li>
+					<li class="inactive">
+						<form class="navbar-form navbar-left" method="post" th:action="@{/searchPost}">
+					      <div class="form-group">
+					        <input type="text" id="searchText" name="searchText" class="form-control" placeholder="Search..."/>
+					      </div>
+					      <button type="submit" class="btn btn-primary">Search</button>
+					    </form>
+				    </li>
+				</ul>
+				<ul sec:authorize="isAuthenticated()" class="nav navbar-nav navbar-right">
+					<li class="dropdown active">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span>Account<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+				          <li>
+				          	<form th:action="@{/accountInfo}" method="get">
+				          		<button type="submit" class="btn btn-info" style="width:100%"><i class="glyphicon glyphicon-edit"></i> Update info </button>
+							</form>
+						  </li>
+				          <li>
+				          	<form th:action="@{/logout}" method="post">
+				          		<button type="submit" class="btn btn-danger" style="width:100%"><i class="glyphicon glyphicon-log-out"></i> Sign out </button>
+							</form>
+						  </li>
+				        </ul>
+			    	</li>
+				</ul>
+			    <ul sec:authorize="isAnonymous()" class="nav navbar-nav navbar-right">
+			      <li><a th:href="@{/welcome}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			    </ul>
+			</div>
+		</nav>
+
+	
+		<div class="row">
+			<div class="col-md-4"></div>
+			<div class="col-md-4">
+				<form th:action="@{/saveAccountInfo}" method="post" th:object="${session.user}">
+					<div class="row" style="padding: 2%;">
+						<label class="col-md-5">Nume:</label>
+						<div class="col-md-7">
+							<input type="text" class="form-control" th:value="${session.user.nume}" id="nume" name="nume"/>
+						</div>
+					</div>
+					<div class="row" style="padding: 2%;">
+						<label class="col-md-5">Prenume:</label>
+						<div class="col-md-7">
+							<input type="text" class="form-control" th:value="${session.user.prenume}" id="prenume" name="prenume"/>
+						</div>
+					</div>
+					<div class="row" style="padding: 2%;">
+						<label class="col-md-5">Username:</label>
+						<div class="col-md-7">
+							<input type="text" readonly="readonly" class="form-control" th:value="${session.user.username}" id="username" name="username"/>
+						</div>
+					</div>
+					<div class="row" style="padding: 2%;">
+						<div class="col-md-12">
+							<input type="submit" style="width:100%" class="btn btn-success" value="Salveaza"/>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-md-4">
+				<div class="col-md-12 pull-right" th:if="${ok}">
+					<div class="alert alert-success">
+					  	<strong>Success!</strong> Salvare efectuata cu success.
+					</div>
+				</div>
+				<div class="col-md-12 pull-right" th:if="${nok}">
+					<div class="alert alert-danger">
+					  	<strong>Eroare!</strong> A aparut o eroare la salvare.
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+<script>
+	window.setTimeout(function() {
+	    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+	        $(this).remove(); 
+	    });
+	}, 2000);
+</script>
+</body>
+</html>
+

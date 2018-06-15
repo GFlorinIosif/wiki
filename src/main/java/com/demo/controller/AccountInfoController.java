@@ -22,8 +22,6 @@ public class AccountInfoController {
 	
 	@GetMapping("/accountInfo")
 	public String accountInfo(Model model, Principal p, HttpServletRequest request) {
-		User user = userRepository.findByUserName(p.getName());
-		request.getSession().setAttribute("user", user);
 		return "/accountInfo";
 	}
 	

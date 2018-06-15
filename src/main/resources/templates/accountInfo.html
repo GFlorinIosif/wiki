@@ -35,12 +35,12 @@
 					<li class="dropdown active">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span>Account<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-				          <li>
+				          <li style="padding: 2%;">
 				          	<form th:action="@{/accountInfo}" method="get">
 				          		<button type="submit" class="btn btn-info" style="width:100%"><i class="glyphicon glyphicon-edit"></i> Update info </button>
 							</form>
 						  </li>
-				          <li>
+				          <li style="padding: 2%;">
 				          	<form th:action="@{/logout}" method="post">
 				          		<button type="submit" class="btn btn-danger" style="width:100%"><i class="glyphicon glyphicon-log-out"></i> Sign out </button>
 							</form>
@@ -49,7 +49,7 @@
 			    	</li>
 				</ul>
 			    <ul sec:authorize="isAnonymous()" class="nav navbar-nav navbar-right">
-			      <li><a th:href="@{/welcome}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			      <li><a th:href="@{/home}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 			    </ul>
 			</div>
 		</nav>
@@ -60,20 +60,20 @@
 			<div class="col-md-4">
 				<form th:action="@{/saveAccountInfo}" method="post" th:object="${session.user}">
 					<div class="row" style="padding: 2%;">
-						<label class="col-md-5">Nume:</label>
-						<div class="col-md-7">
+						<label class="col-md-4">Nume:</label>
+						<div class="col-md-8">
 							<input type="text" class="form-control" th:value="${session.user.nume}" id="nume" name="nume"/>
 						</div>
 					</div>
 					<div class="row" style="padding: 2%;">
-						<label class="col-md-5">Prenume:</label>
-						<div class="col-md-7">
+						<label class="col-md-4">Prenume:</label>
+						<div class="col-md-8">
 							<input type="text" class="form-control" th:value="${session.user.prenume}" id="prenume" name="prenume"/>
 						</div>
 					</div>
 					<div class="row" style="padding: 2%;">
-						<label class="col-md-5">Username:</label>
-						<div class="col-md-7">
+						<label class="col-md-4">Username:</label>
+						<div class="col-md-8">
 							<input type="text" readonly="readonly" class="form-control" th:value="${session.user.username}" id="username" name="username"/>
 						</div>
 					</div>

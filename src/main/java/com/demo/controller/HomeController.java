@@ -3,6 +3,8 @@ package com.demo.controller;
 import java.security.Principal;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +27,12 @@ public class HomeController {
 	UserRepository userRepo;
 	
 	@GetMapping(value = {"/", "/home"})
-	public String home(Model model) {
+	public String home(Model model, Principal p, HttpServletRequest request) {
+		if(p != null) {
+			User loggedUser = userRepo.findByUserName(p.getName());
+			request.getSession().setAttribute("user", loggedUser);
+		}
+		
 		model.addAttribute("listOfPosts", postRepo.findAll());
 		return "home";
 	}

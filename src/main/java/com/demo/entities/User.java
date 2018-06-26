@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -20,6 +22,7 @@ public class User {
 	private String username;
 	
 	@Column(name = "password")
+	@JsonIgnore
 	private String password;
 	
 	@Column(name = "nume")
@@ -28,17 +31,21 @@ public class User {
 	@Column(name = "prenume")
 	private String prenume;
 	
+	@Column(name = "rol")
+	private String rol;
+	
 	public User() {
 		
 	}
 	
-	public User(Long id, String username, String password, String nume, String prenume) {
+	public User(Long id, String username, String password, String nume, String prenume, String rol) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.nume = nume;
 		this.prenume = prenume;
+		this.rol = rol;
 	}
 
 	public Long getId() {
@@ -48,7 +55,7 @@ public class User {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	
 	public String getUsername() {
 		return username;
 	}
@@ -81,6 +88,13 @@ public class User {
 		this.prenume = prenume;
 	}
 	
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
 	
 
 }

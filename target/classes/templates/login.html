@@ -5,14 +5,18 @@
 	<title>EC's Wiki</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css"/>
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
 
 <style>
 .imgcontainer {
     text-align: center;
-    margin: 24px 0 12px 0;
+    margin: 10% 0 0 0;
 }
 
 img.avatar {
@@ -22,64 +26,61 @@ img.avatar {
 
 <body>
    	<div class="container">
-    	<nav class="navbar navbar-inverse">
-		  <div class="container-fluid">
-		    	<div class="navbar-header">
-					<a class="navbar-brand" href="/">EC's Wiki</a>
+    	<div th:replace="fragments/navbar :: meniu">  </div>
+		
+		<!-- Left Column -->
+	    <div class="w3-col m4">
+	    	<div class="w3-container">
+	    	
+	    	</div>
+	    </div><!-- END Left Column -->
+	    
+	    <!-- Middle Column -->
+	    <div class="w3-col m4">
+	    	<div class="w3-container w3-card w3-white w3-round w3-margin">
+	    		<div class="row">
+		    		<div class="imgcontainer">
+					    <img  th:src="@{/images/user_logo.png}" alt="Company logo" class="avatar"/>
+					    <div class="col-md-12" style="color:red" th:if="${param.error}">
+				           <div class="alert alert-danger">
+							  	<strong>Error!</strong> Invalid username or password.
+							</div>
+				        </div>
+				        <div class="col-md-12" th:if="${param.logout}">
+				           <div class="alert alert-success">
+							  	<strong>Success!</strong> You have been logged out.
+							</div>
+			        	</div>
+					</div>
 				</div>
-			</div>
-		</nav>
+				<div class="row">
+					<form th:action="@{/login}" method="post">
+			            <div class="row"  style="padding: 2%;">
+							<label class="col-md-4">Username:</label>
+							<div class="col-md-8">
+								<input type="text" class="form-control" id="username" name="username" placeholder="Enter username"/>
+							</div>
+						</div>
+						<div class="row" style="padding: 2%;">
+							<label class="col-md-4">Password:</label>
+							<div class="col-md-8">
+								<input type="password" class="form-control" id="password" name="password"  placeholder="Enter password"/>
+							</div>
+						</div>
+			            
+			            <div class="col-md-12" style="padding: 2%;">
+		            		<button type="submit" style="width: 100%;" class="btn btn-success"><i class="glyphicon glyphicon-log-in"></i> Sign in </button>
+			            </div>
+			        </form>
+				</div>
+	    	</div>
+	    </div><!-- END middle Column -->
+	    
+	    <!-- Right Column -->
+	    <div class="w3-col m4">
+	    
+	    </div><!-- END right Column -->
 		
-		<div class="row" >
-			<div class="col-md-12">
-				<div class="col-md-4"></div>
-				<div class="col-md-4" style="color:red" th:if="${param.error}">
-		           <div class="alert alert-danger">
-					  	<strong>Error!</strong> Invalid username and password..
-					</div>
-		        </div>
-		        <div class="col-md-4" th:if="${param.logout}">
-		           <div class="alert alert-success">
-					  	<strong>Success!</strong> You have been logged out.
-					</div>
-	        	</div>
-        	</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4">
-				<div class="imgcontainer">
-<!-- 				    <img  src="/user_logo.png" alt="Company logo" class="avatar"/> -->
-				  </div>
-			</div>
-			<div class="col-md-4"></div>
-		</div>
-		
-		
-		
-        <div class="row">
-        	<div class="col-md-4"></div>
-        	<div class="col-md-4">
-	        	<form th:action="@{/login}" method="post">
-		            <div class="col-md-12" style="padding: 2%;">
-		            	<label class="col-md-5">User Name:</label>
-		            	<div class="col-md-7">
-		            		<input type="text" name="username" placeholder="Enter username"/> 
-		            	</div>
-		            </div>
-		            <div class="col-md-12" style="padding: 2%;">
-		            	<label class="col-md-5">Password: </label>
-		            	<div class="col-md-7">
-		            		<input type="password" name="password" placeholder="Enter password"/>
-		            	</div>	
-		            </div>
-		            <div class="col-md-12" style="padding: 2%;">
-	            		<button type="submit" style="width: 100%;" class="btn btn-success"><i class="glyphicon glyphicon-log-in"></i> Sign in </button>
-		            </div>
-		        </form>
-			</div>
-			<div class="col-md-4"></div>
-        </div>
-       </div>
+	</div>
 </body>
 </html>

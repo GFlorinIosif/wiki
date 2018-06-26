@@ -3,36 +3,154 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-<title>EC's Wiki</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<title>EC's Wiki</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css"/>
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
 <body>
-	<nav class="navbar navbar-inverse">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="/home">EC's Wiki</a>
+	<div class="container">
+		
+		<div th:replace="fragments/navbar :: meniu">  </div>
+	
+		<div sec:authorize="!isAuthenticated()">
+			<div class="col-md-12">
+				<p>You are not logged in. Click <a th:href="@{/home}">here</a> to log in.</p>
 			</div>
 		</div>
-	</nav>
-
-	<div sec:authorize="isAuthenticated()">
-		<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-		<form th:action="@{/logout}" method="post">
-			<input type="submit" value="Sign Out" class="btn btn-error" />
-		</form>
+		<div sec:authorize="isAuthenticated()">
+			<!-- Left Column -->
+		    <div class="w3-col m3">
+		    	<div class="w3-container">
+			         <h4 class="w3-center">My Profile</h4>
+			         <p class="w3-center"><img th:src="@{/images/user_logo.png}" style="height: 50%; width: 50%" alt="Avatar"/></p>
+			         <hr/>
+			         <i class="fa fa-address-book" style="float: left; padding: 2%"></i><p th:text="'First name: ' + ${session.user.nume}"></p>
+			         <i class="fa fa-address-book" style="float: left; padding: 2%"></i><p th:text="'Last name: ' + ${session.user.prenume}"></p>
+		        </div>
+		        <div class="col-md-12" th:if="${ok}">
+					<div class="alert alert-success">
+					  	<strong>Success!</strong> Salvare efectuata cu success.
+					</div>
+				</div>
+				<div class="col-md-12" th:if="${nok}">
+					<div class="alert alert-danger">
+					  	<strong>Eroare!</strong> A aparut o eroare la salvare.
+					</div>
+				</div><br/> <hr/>
+				<div class="w3-container">
+					<div class="row">
+						<div class="col-md-12" th:each="categorie : ${categorii}">
+							<div class="row">
+								<div class="col-md-1">
+									<input type="checkbox" name="${categorie}" checked="checked"/>
+								</div>
+								<div class="col-md-10">
+									<p th:text="${categorie.denumire}"></p>
+								</div>	
+							</div>
+							<div class="row" style="margin-left: 10%;">
+								<div class="col-md-12" th:each="subCategorie : ${subCategorii}">
+									<div class="row" th:if="${subCategorie.Category.id} == ${categorie.id}">
+										<div class="col-md-1">
+											<input type="checkbox" name="${subCategorie}" checked="checked"/>
+										</div>
+										<div class="col-md-10">
+											<p th:text="${subCategorie.denumire}"></p>
+										</div>	
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+				   		<div class="col-md-12">
+				   			<button class="btn btn-success" onclick="filtreazaLista()">Aplica criterii</button>
+				   		</div>
+				   	</div>
+				</div>
+		    </div>  <!-- END Left Column -->
+		     <!-- Middle Column -->
+			<div class="w3-col m9" >
+				<div class="col-md-12">
+					<div class="w3-row-padding">
+				        <div class="w3-col m12">
+				            <div class="w3-container w3-padding">
+							  	<a th:href="@{/addNewPost}" style="width: 100%" class="w3-button w3-theme"><i class="fa fa-plus"></i> Add new post </a>
+				            </div>
+				        </div>
+				      </div>
+				    </div>
+				<div class="col-md-12" th:each="post : ${listOfPosts}">
+					<div class="w3-container w3-card w3-white w3-round w3-margin"><br/>
+						<div class="row">
+							<div class="col-md-12">
+								<img th:src="@{/images/user_logo.png}" alt="Avatar" class="w3-left w3-margin-right" style="width:60px"/>
+						        <span class="w3-right w3-opacity"><i class="fa fa-clock-o" aria-hidden="true"></i> <span th:text="${#dates.format(post.dataAdaugare, 'dd-MM-yyyy HH:mm')}"></span></span>
+						        <h4 th:text="${post.author.nume} + ' ' + ${post.author.prenume}"></h4>
+						        <h5 th:text="${post.titlu}"></h5>
+					        </div>
+						</div>
+					    <div class="row">
+					    	<div class="col-md-12">
+					    	 	<hr class="w3-clear"/>
+					    	</div>
+					    </div>
+				      	<div class="row">
+				      		<div class="col-md-12">
+				      			<p th:utext="${post.descriere}"></p>
+				      		</div>
+				      	</div>
+					    <div class="row">
+					    	<div class="col-md-3">
+						    	 <form method="post" th:action="@{/viewPost}">
+									<input type="number" id="postId" name="postId" style="display: none" th:value="${post.id}"/>
+								  	<button type="submit" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-eye"></i> Details</button>
+								</form>
+							</div>
+							<div class="col-md-3" th:each="subCategorie : ${post.getSubCategori()}">
+								<p th:text="${subCategorie.denumire}"></p>
+							</div>
+					    </div>
+		    		</div>
+				</div>
+			</div>  <!-- END Middle Column -->
+		</div>
 	</div>
 
-	<div sec:authorize="isAnonymous()">
-		<a class="btn btn-success" th:href="@{/welcome}">Login</a> 
-<!-- 		<a class="btn btn-primary" th:href="@{/register}">Register</a> -->
-	</div>
-
+<script th:inline="javascript">
+/*<![CDATA[*/
+	
+	function filtreazaLista() {
+		$.ajax({
+	        type: "POST",
+	        contentType: "application/json",
+	        url: "/filtreazaLista",
+	        data: JSON.stringify("{ceva: da}"),
+	        dataType: 'json',
+	        cache: false,
+	        timeout: 600000,
+	        success: function (data) {
+	        	debugger;
+	        }, error: function(e) {
+	        	debugger;
+	        }
+		});
+	}
+	
+	window.setTimeout(function() {
+	    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+	        $(this).remove(); 
+	    });
+	}, 2000);
+	
+/*]]>*/
+</script>		
 
 </body>
 </html>

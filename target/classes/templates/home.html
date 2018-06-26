@@ -3,104 +3,105 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-<title>EC's Wiki</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<title>EC's Wiki</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css"/>
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
 <body>
 	<div class="container">
-		<nav class="navbar navbar-inverse">
-	 		<div class="container-fluid">
-		   		<div class="navbar-header">
-					<a class="navbar-brand" th:href="@{/home}">EC's Wiki</a>
-				</div>
-				<ul sec:authorize="isAuthenticated()" class="nav navbar-nav">
-					<li class="active"><a th:href="@{/home}">Home</a></li>
-					<li class="inactive"><a th:href="@{/documents}">Documents</a></li>
-					<li class="inactive">
-						<form class="navbar-form navbar-left" method="post" th:action="@{/searchPost}">
-					      <div class="form-group">
-					        <input type="text" id="searchText" name="searchText" class="form-control" placeholder="Search..."/>
-					      </div>
-					      <button type="submit" class="btn btn-primary">Search</button>
-					    </form>
-				    </li>
-				</ul>
-				<ul sec:authorize="isAuthenticated()" class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span>Account<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-				          <li>
-				          	<form th:action="@{/accountInfo}" method="get">
-				          		<button type="submit" class="btn btn-info" style="width:100%"><i class="glyphicon glyphicon-edit"></i> Update info </button>
-							</form>
-						  </li>
-				          <li>
-				          	<form th:action="@{/logout}" method="post">
-				          		<button type="submit" class="btn btn-danger" style="width:100%"><i class="glyphicon glyphicon-log-out"></i> Sign out </button>
-							</form>
-						  </li>
-				        </ul>
-			    	</li>
-				</ul>
-			    <ul sec:authorize="isAnonymous()" class="nav navbar-nav navbar-right">
-			      <li><a th:href="@{/welcome}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-			    </ul>
-			</div>
-		</nav>
+		
+		<div th:replace="fragments/navbar :: meniu">  </div>
 	
-		<div class="row" sec:authorize="isAnonymous()">
+		<div sec:authorize="!isAuthenticated()">
 			<div class="col-md-12">
-				<p>You are not logged in. Click <a th:href="@{/welcome}">here</a> to log in.</p>
+				<p>You are not logged in. Click <a th:href="@{/home}">here</a> to log in.</p>
 			</div>
 		</div>
-		
-		
-		<div  sec:authorize="isAuthenticated()">
-			<div class="row">
-				<div class="col-md-12" th:each="post : ${listOfPosts}" style="padding-bottom:1%;">
-					<div class="col-md-12">
-						<div class="btn" style="background-color:#e1e1e1; width:100%; height: 35px; padding-top: 0.5%; padding-left: 5%" data-toggle="collapse" th:attr="data-target='#accordion_' + ${post.id}, aria-controls='accordion_' + ${post.id}" aria-expanded="false">
-							<span class="pull-left" th:text="${post.titlu}"></span>
-							<span class="pull-right" style="padding-right:15px;" th:text="'Added by: ' + ${post.author.nume} + ' ' + ${post.author.prenume}"></span>
-						</div>
-						
-					</div>
-					<div class="collapse col-md-12" th:id="'accordion_' + ${post.id}">
-						<p th:utext="${post.descriere}"></p>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-6">
-					<a th:href="@{/addNewPost}" class="btn btn-info"><i class="glyphicon glyphicon-plus"></i> Add new post </a>
-				</div>
-				<div class="col-md-4 pull-right" th:if="${ok}">
+		<div sec:authorize="isAuthenticated()">
+			<!-- Left Column -->
+		    <div class="w3-col m3">
+		    	<div class="w3-container">
+			         <h4 class="w3-center">My Profile</h4>
+			         <p class="w3-center"><img th:src="@{/images/user_logo.png}" style="height: 50%; width: 50%" alt="Avatar"/></p>
+			         <hr/>
+			         <i class="fa fa-address-book" style="float: left; padding: 2%"></i><p th:text="'First name: ' + ${session.user.nume}"></p>
+			         <i class="fa fa-address-book" style="float: left; padding: 2%"></i><p th:text="'Last name: ' + ${session.user.prenume}"></p>
+		        </div>
+		        <div class="col-md-12" th:if="${ok}">
 					<div class="alert alert-success">
 					  	<strong>Success!</strong> Salvare efectuata cu success.
 					</div>
 				</div>
-				<div class="col-md-4 pull-right" th:if="${nok}">
+				<div class="col-md-12" th:if="${nok}">
 					<div class="alert alert-danger">
 					  	<strong>Eroare!</strong> A aparut o eroare la salvare.
 					</div>
+				</div><br/> <hr/>
+				<div class="w3-container">
+					<div class="row">
+						<form method="get" th:action="@{/filterPost}" th:object="${subCategorii}">
+							<div class="col-md-12" th:each="categorie : ${categorii}">
+								<div class="row">
+									<div class="col-md-1">
+										<input type="checkbox" th:name="${categorie.id}" th:value="${categorie.isChecked()}" th:checked="${categorie.isChecked()}" th:onclick="${categorie.isChecked()} ? ${categorie.setChecked(true)} : ${categorie.setChecked(false)}"/>
+									</div>
+									<div class="col-md-10">
+										<p th:text="${categorie.denumire}"></p>
+									</div>	
+								</div>
+								<div class="row" style="margin-left: 10%;">
+									<div class="col-md-12" th:each="subCategorie : ${subCategorii}">
+										<div class="row" th:if="${subCategorie.Category.id} == ${categorie.id}">
+											<div class="col-md-1">
+												<input type="checkbox" th:name="${subCategorie.id}" th:value="${subCategorie.isChecked()}" th:checked="${subCategorie.isChecked()}" th:disabled="!${categorie.isChecked()}"/>
+											</div>
+											<div class="col-md-10">
+												<p th:text="${subCategorie.denumire}"></p>
+											</div>	
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<button type="submit" class="btn btn-success">Aplica criterii</button>
+							</div>
+						</form>
+					</div>
 				</div>
-			</div>
+		    </div>  <!-- END Left Column -->
+		     <!-- Middle Column -->
+			<div class="w3-col m9" >
+				<div class="col-md-12">
+					<div class="w3-row-padding">
+				        <div class="w3-col m12">
+				            <div class="w3-container w3-padding">
+							  	<a th:href="@{/addNewPost}" style="width: 100%" class="w3-button w3-theme"><i class="fa fa-plus"></i> Add new post </a>
+				            </div>
+				        </div>
+			      	</div>
+			    </div>
+				<div th:replace="fragments/postList :: listing">  </div>
+			</div>  <!-- END Middle Column -->
 		</div>
 	</div>
 
-<script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+	
 	window.setTimeout(function() {
 	    $(".alert").fadeTo(500, 0).slideUp(500, function(){
 	        $(this).remove(); 
 	    });
 	}, 2000);
-</script>
 	
+/*]]>*/
+</script>		
+
 </body>
 </html>

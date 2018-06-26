@@ -1,0 +1,35 @@
+<div th:fragment="listing">
+	<div class="col-md-12" th:each="post : ${listOfPosts}">
+		<div class="w3-container w3-card w3-white w3-round w3-margin"><br/>
+			<div class="row">
+				<div class="col-md-12">
+					<img th:src="@{/images/user_logo.png}" alt="Avatar" class="w3-left w3-margin-right" style="width:60px"/>
+			        <span class="w3-right w3-opacity"><i class="fa fa-clock-o" aria-hidden="true"></i> <span th:text="${#dates.format(post.dataAdaugare, 'dd-MM-yyyy HH:mm')}"></span></span>
+			        <h4 th:text="${post.author.nume} + ' ' + ${post.author.prenume}"></h4>
+			        <h5 th:text="${post.titlu}"></h5>
+		        </div>
+			</div>
+		    <div class="row">
+		    	<div class="col-md-12">
+		    	 	<hr class="w3-clear"/>
+		    	</div>
+		    </div>
+	      	<div class="row">
+	      		<div class="col-md-12">
+	      			<p th:utext="${post.descriere}"></p>
+	      		</div>
+	      	</div>
+		    <div class="row">
+		    	<div class="col-md-3">
+			    	 <form method="get" th:action="@{/viewPost}">
+						<input type="number" id="postId" name="postId" style="display: none" th:value="${post.id}"/>
+					  	<button type="submit" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-eye"></i> Details</button>
+					</form>
+				</div>
+				<div class="col-md-3" th:each="subCategorie : ${post.getSubCategori()}">
+					<p th:text="${subCategorie.denumire}"></p>
+				</div>
+		    </div>
+	  		</div>
+	</div>
+</div>

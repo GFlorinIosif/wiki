@@ -5,6 +5,7 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +27,26 @@ public class AccountInfoController {
 	}
 	
 	@PostMapping("/saveAccountInfo")
-	public String saveAccountInfo(@ModelAttribute("nume") String nume, @ModelAttribute("prenume") String prenume, Model model, HttpServletRequest request) {
+	public String saveAccountInfo(@ModelAttribute("nume") String nume, @ModelAttribute("prenume") String prenume, @ModelAttribute("oldPassword") String oldPassword, 
+				@ModelAttribute("newPassword") String newPassword, @ModelAttribute("confirmPassword") String confirmPassword, Model model, HttpServletRequest request) {
 		User succesUpdate = null;
 		try {
 			User user = (User) request.getSession().getAttribute("user");
+			boolean changePassword = (oldPassword != null && oldPassword.length() > 0);
+			if(changePassword) {
+				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//				String oldPassEncoded = encoder.encode(oldPassword);
+				if(!encoder.matches(oldPassword, user.getPassword())) {
+					model.addAttribute("wrongPassword", true);
+					return "/accountInfo";
+				} else if (!newPassword.equals(confirmPassword)) {
+					model.addAttribute("passwordMissMatch", true);
+					return "/accountInfo";
+				} else {
+					user.setPassword(encoder.encode(newPassword));
+				}
+			}
+			
 			user.setNume(nume);
 			user.setPrenume(prenume);
 			succesUpdate = userRepository.save(user);

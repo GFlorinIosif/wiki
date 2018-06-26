@@ -16,16 +16,16 @@ public class Comment {
 	@GeneratedValue
 	private Long id;
 	
-	@Column(name = "idAutor")
+	@Column(name = "id_autor")
 	private Long idAutor;
 	
-	@Column(name = "idPostare")
+	@Column(name = "id_postare")
 	private Long idPostare;
 	
 	@Column(name = "comentariu")
 	private String comentariu;
 	
-	@Column(name = "dataAdaugare")
+	@Column(name = "data_adaugare")
 	private Date dataAdaugare;
 	
 	public Comment() {

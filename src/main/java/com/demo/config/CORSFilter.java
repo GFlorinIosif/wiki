@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 public class CORSFilter implements Filter {
 
-    private static final List<String> allowedOrigins = Arrays.asList("http://localhost:4200");
+    private static final List<String> allowedOrigins = Arrays.asList("http://localhost:4200", "http://andrei261093.go.ro:4200");
 
     @Override
     public void init(FilterConfig filterConfig) {

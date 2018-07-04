@@ -16,10 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.sun.istack.internal.NotNull;
-
 @Entity
-@Table(name = "post")
+@Table(name = "postari")
 public class Post {
 	
 	@Id
@@ -28,11 +26,9 @@ public class Post {
 	private Long id;
 	
 	@Column(name = "titlu")
-	@NotNull
 	private String titlu;
 	
 	@Column(name = "descriere")
-	@NotNull
 	private String descriere;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -47,7 +43,6 @@ public class Post {
 	private Set<File> files;
 	
 	@OneToMany
-	@NotNull
 	private Set<SubCategory> subCategorii;
 	
 	public Post() {

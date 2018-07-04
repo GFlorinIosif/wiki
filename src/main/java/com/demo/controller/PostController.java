@@ -56,15 +56,9 @@ public class PostController {
 		log.info("getPostList route called");
 		return postList;
 	}
-	
-	@RequestMapping("/addNewPost")
-	public String addNewPost(Model model) {
-		model.addAttribute("categorii", categoryRepo.findAll());
-		model.addAttribute("subCategorii", subCategoryRepo.findAll());
-		return "addNewPost";
-	}
-	
+
 	@PostMapping(value = {"/savePost"})
+	@ResponseBody
 	public String home(@ModelAttribute("titlu") String titlu, @ModelAttribute("descriere") String descriere, @RequestParam("files") MultipartFile[] files, 
 			@ModelAttribute("idCategorie") long idCategorie, @RequestParam("subCategorii") long [] subCategorii, Model model, Principal p) {
 		

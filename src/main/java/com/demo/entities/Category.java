@@ -1,15 +1,10 @@
 package com.demo.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "category")
+@Table(name = "categorii")
 public class Category {
 	
 	@Id
@@ -19,10 +14,11 @@ public class Category {
 	
 	@Column(name = "denumire")
 	private String denumire;
-	
-	@Transient
-	private boolean isChecked = false;
-	
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "mapare_cat_sub_cat", joinColumns = {@JoinColumn(name = "id_categorie")}, inverseJoinColumns = {@JoinColumn(name = "id_sub_categorie")})
+	List<SubCategory> subCategorii;
+
 	public Category() {
 		
 	}
@@ -48,14 +44,8 @@ public class Category {
 		this.denumire = denumire;
 	}
 
-	public boolean isChecked() {
-		return isChecked;
-	}
+	public List<SubCategory> getSubCategorii () { return subCategorii; }
 
-	public void setChecked(boolean isChecked) {
-		this.isChecked = isChecked;
-	}
-	
-	
+	public void setSubCategorii(List<SubCategory> subCategorii) { this.subCategorii = subCategorii; }
 
 }

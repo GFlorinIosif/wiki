@@ -6,16 +6,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.demo.entities.File;
@@ -30,7 +29,9 @@ import com.demo.repositories.UserRepository;
 
 @Controller
 public class PostController {
-	
+
+	private Logger log = Logger.getLogger("[SPRING BOOT - EC's WIKI]");;
+
 	private static String UPLOADED_FOLDER = "D://upload//temp//";
 	
 	@Autowired
@@ -47,6 +48,14 @@ public class PostController {
 	
 	@Autowired
 	SubCategoryRepository subCategoryRepo;
+
+	@GetMapping(value = {"/getPostList"})
+	@ResponseBody
+	public List<Post> getPostList(Principal p) {
+		List<Post> postList = postRepo.findAllOrderedByDate();
+		log.info("getPostList route called");
+		return postList;
+	}
 	
 	@RequestMapping("/addNewPost")
 	public String addNewPost(Model model) {

@@ -3,18 +3,7 @@ package com.demo.entities;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "postari")
@@ -40,9 +29,11 @@ public class Post {
 	private User author;
 	
 	@OneToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "mapare_postari_fisiere", joinColumns = {@JoinColumn(name = "id_postare")}, inverseJoinColumns = {@JoinColumn(name = "id_fisier")})
 	private Set<File> files;
 	
 	@OneToMany
+	@JoinTable(name = "mapare_postari_sub_categorii", joinColumns = {@JoinColumn(name = "id_postare")}, inverseJoinColumns = {@JoinColumn(name = "id_sub_categorie")})
 	private Set<SubCategory> subCategorii;
 	
 	public Post() {

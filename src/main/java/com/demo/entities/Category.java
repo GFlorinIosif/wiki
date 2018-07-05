@@ -1,5 +1,8 @@
 package com.demo.entities;
 
+import jdk.nashorn.internal.objects.annotations.Getter;
+import jdk.nashorn.internal.objects.annotations.Setter;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,7 +19,7 @@ public class Category {
 	private String denumire;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "mapare_cat_sub_cat", joinColumns = {@JoinColumn(name = "id_categorie")}, inverseJoinColumns = {@JoinColumn(name = "id_sub_categorie")})
+	@JoinTable(name = "mapare_cat_sub_cat", joinColumns = { @JoinColumn(name = "id_categorie") }, inverseJoinColumns = { @JoinColumn(name = "id_sub_categorie") })
 	List<SubCategory> subCategorii;
 
 	public Category() {

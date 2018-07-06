@@ -1,6 +1,9 @@
 package com.demo.entities;
 
+import jdk.nashorn.internal.objects.annotations.Property;
+
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -27,20 +30,21 @@ public class Post {
 	@ManyToOne
 	@JoinColumn(name = "id_autor")
 	private User author;
+
 	
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "mapare_postari_fisiere", joinColumns = {@JoinColumn(name = "id_postare")}, inverseJoinColumns = {@JoinColumn(name = "id_fisier")})
-	private Set<File> files;
+	private List<File> files;
 	
 	@OneToMany
 	@JoinTable(name = "mapare_postari_sub_categorii", joinColumns = {@JoinColumn(name = "id_postare")}, inverseJoinColumns = {@JoinColumn(name = "id_sub_categorie")})
-	private Set<SubCategory> subCategorii;
+	private List<SubCategory> subCategorii;
 	
 	public Post() {
 		
 	}
 
-	public Post(Long id, String titlu, String descriere, Date dataAdaugare, User user, Set<File> files, Set<SubCategory> subCategorii) {
+	public Post(Long id, String titlu, String descriere, Date dataAdaugare, User user, List<File> files, List<SubCategory> subCategorii) {
 		super();
 		this.id = id;
 		this.titlu = titlu;
@@ -87,19 +91,19 @@ public class Post {
 		this.author = author;
 	}
 	
-	public Set<File> getfiles() {
+	public List<File> getfiles() {
 		return files;
 	}
 	
-	public void setFiles(Set<File> files) {
+	public void setFiles(List<File> files) {
 		this.files = files;
 	}
 
-	public Set<SubCategory> getSubCategori() {
+	public List<SubCategory> getSubCategori() {
 		return subCategorii;
 	}
 
-	public void setSubCategori(Set<SubCategory> subCategorii) {
+	public void setSubCategori(List<SubCategory> subCategorii) {
 		this.subCategorii = subCategorii;
 	}
 	

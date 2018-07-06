@@ -27,6 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	CustomAuthSuccessHandler customAuthSuccessHandler;
+
+	@Autowired
+	LoginAuthEntryPoint loginAuthEntryPoint;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -35,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers("/**").authenticated()
 				.antMatchers("/login").permitAll()
-				.antMatchers("/").permitAll().anyRequest().authenticated()
+				.antMatchers("/").permitAll()
 			.and()
 				.formLogin()
 					.failureHandler(customAuthFailureHandler)
@@ -43,7 +46,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .httpBasic()
 			.and()
+				.exceptionHandling().authenticationEntryPoint(loginAuthEntryPoint)
+			.and()
 				.csrf().disable();
+
 	}
 	
 	@Override

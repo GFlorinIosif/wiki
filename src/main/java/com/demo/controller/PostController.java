@@ -1,31 +1,32 @@
 package com.demo.controller;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
+import com.demo.bl.PostBL;
+import com.demo.entities.*;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.demo.entities.File;
-import com.demo.entities.Post;
-import com.demo.entities.SubCategory;
-import com.demo.entities.User;
 import com.demo.repositories.CategoryRepository;
 import com.demo.repositories.FileRepository;
 import com.demo.repositories.PostRepository;
 import com.demo.repositories.SubCategoryRepository;
 import com.demo.repositories.UserRepository;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class PostController {
@@ -33,31 +34,41 @@ public class PostController {
 	private Logger log = Logger.getLogger("[SPRING BOOT - EC's WIKI]");;
 
 	private static String UPLOADED_FOLDER = "D://upload//temp//";
-	
+
 	@Autowired
-	UserRepository userRepo;
-	
-	@Autowired
-	PostRepository postRepo;
-	
-	@Autowired
-	FileRepository fileRepo;
-	
-	@Autowired
-	CategoryRepository categoryRepo;
-	
-	@Autowired
-	SubCategoryRepository subCategoryRepo;
+	private PostBL postBL;
 
 	@GetMapping(value = {"/getPostList"})
 	@ResponseBody
 	public List<Post> getPostList(Principal p) {
-		List<Post> postList = postRepo.findAllOrderedByDate();
-		log.info("getPostList route called");
+        log.info("getPostList route called");
+		List<Post> postList = postBL.getPostListOrderedByDate();
 		return postList;
 	}
 
-	@PostMapping(value = {"/savePost"})
+	@PostMapping("/savePost")
+	@ResponseBody
+	public boolean savePost(HttpServletRequest request, HttpServletResponse response, Principal p) {
+		boolean result;
+
+		try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<SubCategory>>() { }.getType();
+
+            String title = request.getParameter("title");
+            String description = request.getParameter("description");
+            List<SubCategory> subCategories = gson.fromJson(request.getParameter("subCategories"), listType);
+
+            result = postBL.salveazaPostare(title, description, subCategories, p.getName());
+        } catch (Exception e) {
+		    result = false;
+		    e.printStackTrace();
+        }
+
+		return result;
+	}
+
+	/*@PostMapping(value = {"/savePostXX"})
 	@ResponseBody
 	public String home(@ModelAttribute("titlu") String titlu, @ModelAttribute("descriere") String descriere, @RequestParam("files") MultipartFile[] files, 
 			@ModelAttribute("idCategorie") long idCategorie, @RequestParam("subCategorii") long [] subCategorii, Model model, Principal p) {
@@ -115,6 +126,6 @@ public class PostController {
 		
 		model.addAttribute("page", "home");
 		return "home";
-	}
+	}*/
 
 }

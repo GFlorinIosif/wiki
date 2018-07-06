@@ -18,7 +18,7 @@ public class CategoriiController {
 
     @GetMapping("getListaCategorii")
     @ResponseBody
-    public List<Category> getCatList() {
+    public List<Category> getListaCategorii() {
         List<Category> cats = categoryRepo.findAll();
         return cats;
     }

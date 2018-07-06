@@ -35,7 +35,7 @@ public class SearchController {
 		searchText = searchText.toLowerCase().trim();
 		if(searchText.startsWith("autor:")) {
 			String autor = searchText.substring(searchText.indexOf(":"), searchText.length()).trim();
-			List<Post> allPosts = postRepo.findAllOrderedByDate();
+			List<Post> allPosts = postRepo.findAll();
 			for(Post post : allPosts) {
 				User postUser = post.getAuthor();
 				if(postUser.getNume().toLowerCase().contains(autor) || postUser.getPrenume().toLowerCase().contains(autor)) {

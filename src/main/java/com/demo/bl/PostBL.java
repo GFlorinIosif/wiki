@@ -7,8 +7,7 @@ import com.demo.entities.User;
 import com.demo.repositories.PostRepository;
 import com.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.OrderBy;
@@ -43,12 +42,29 @@ public class PostBL {
         return postSaved;
     }
 
-    public List<Post> getPostListOrderedByDate() {
+    public Page<Post> getPostListOrderedByDate(int page, int size) {
         Sort sortare = new Sort(Sort.Direction.DESC, "dataAdaugare");
-
-        PageRequest paginare = new PageRequest(0, 10);
-
-        List<Post> postari = postRepo.findAll(sortare);
+        Pageable p = new PageRequest(page, size, sortare);
+        Page<Post> postari = postRepo.findAll(p);
         return postari;
     }
+
+    public Page<Post> getPostListFilteredBySubCategory(int page, int size, List<SubCategory> subCategori) {
+        Sort sortare = new Sort(Sort.Direction.DESC, "dataAdaugare");
+        Pageable p = new PageRequest(page, size, sortare);
+        String ids = "";
+        for(SubCategory subCat : subCategori) {
+            ids += subCat.getId() + ",";
+        }
+        ids = ids.substring(0, ids.length() - 1);
+
+        Page<Post> postari;
+        System.out.println("LIMITS : " + page + " ->  size " + size + " => " + (page * size + 1) + " -> " + (page * size + size + 1));
+        List<Post> postList = postRepo.findAllBySubCategory(Integer.MAX_VALUE, ids, 0, 100);
+        postari = new PageImpl<Post>(postRepo.findAllBySubCategory(Integer.MAX_VALUE, ids, page * size + 1, page * size + size + 1), p, postList.size());
+
+
+        return postari;
+    }
+
 }

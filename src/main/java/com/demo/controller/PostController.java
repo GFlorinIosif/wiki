@@ -14,6 +14,7 @@ import com.demo.entities.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +41,22 @@ public class PostController {
 
 	@GetMapping(value = {"/getPostList"})
 	@ResponseBody
-	public List<Post> getPostList(Principal p) {
+	public Page<Post> getPostList(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam(name = "filters", required = false) String subCategorii) {
         log.info("getPostList route called");
-		List<Post> postList = postBL.getPostListOrderedByDate();
+
+        Page<Post> postList = null;
+
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<SubCategory>>() { }.getType();
+
+        List<SubCategory> subCategories = gson.fromJson(subCategorii, listType);
+        if(subCategories != null && subCategories.size() > 0) {
+            postList = postBL.getPostListFilteredBySubCategory(page, size, subCategories);
+        } else {
+            postList = postBL.getPostListOrderedByDate(page, size);
+        }
+
+
 		return postList;
 	}
 

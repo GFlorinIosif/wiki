@@ -25,6 +25,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
             "order by a.data_adaugare desc \n" +
             ") inner_query ) SELECT * FROM query WHERE __hibernate_row_nr__ >= ?3 AND __hibernate_row_nr__ < ?4",
             nativeQuery = true)
-	public List<Post> findAllBySubCategory(int top, String ids, int start, int end);
+	public List<Post> findAllBySubCategory(int top, List<Long>  v, int start, int end);
 
 }

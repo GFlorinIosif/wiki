@@ -1,10 +1,6 @@
 package com.demo.controller;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.*;
 import java.util.logging.Logger;
@@ -15,21 +11,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.demo.repositories.CategoryRepository;
-import com.demo.repositories.FileRepository;
-import com.demo.repositories.PostRepository;
-import com.demo.repositories.SubCategoryRepository;
-import com.demo.repositories.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Controller
+@RestController
 public class PostController {
 
 	private Logger log = Logger.getLogger("[SPRING BOOT - EC's WIKI]");;

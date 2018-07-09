@@ -4,8 +4,9 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.demo.bl.PostBL;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,49 +17,23 @@ import com.demo.entities.User;
 import com.demo.repositories.CategoryRepository;
 import com.demo.repositories.PostRepository;
 import com.demo.repositories.SubCategoryRepository;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class SearchController {
-	
-	@Autowired
-	PostRepository postRepo;
 
 	@Autowired
-	CategoryRepository categoryRepo;
-	
-	@Autowired
-	SubCategoryRepository subCategoryRepo;
+	private PostBL postBL;
 	
 	@GetMapping(value = {"/searchPost"})
-	public String home(@ModelAttribute("searchText") String searchText, Model model, Principal p) {
-		List<Post> listOfPosts = new ArrayList<Post>();
+	public Page<Post> searchPost(@RequestParam("page") int page, @RequestParam("size") int size,@RequestParam("searchText") String searchText) {
 		searchText = searchText.toLowerCase().trim();
 		if(searchText.startsWith("autor:")) {
 			String autor = searchText.substring(searchText.indexOf(":"), searchText.length()).trim();
-			List<Post> allPosts = postRepo.findAll();
-			for(Post post : allPosts) {
-				User postUser = post.getAuthor();
-				if(postUser.getNume().toLowerCase().contains(autor) || postUser.getPrenume().toLowerCase().contains(autor)) {
-					listOfPosts.add(post);
-				}
-			}
+			return postBL.getPostListByAuthor(autor, page, size);
 		} else {
-			listOfPosts = postRepo.findAllByTitle(searchText);
+			return postBL.getPostListByTitle(searchText, page, size);
 		}
-		model.addAttribute("listOfPosts", listOfPosts);
-		model.addAttribute("categorii", categoryRepo.findAll());
-		model.addAttribute("subCategorii", subCategoryRepo.findAll());
-		model.addAttribute("page", "search");
-		return "home";
 	}
-	
-	@GetMapping("/filterPost")
-	public String home(@ModelAttribute ArrayList<SubCategory> subCategorii, Model model, Principal p) {
-		model.addAttribute("listOfPosts", postRepo.findAllByTitle("link"));
-		model.addAttribute("categorii", categoryRepo.findAll());
-		model.addAttribute("subCategorii", subCategoryRepo.findAll());
-		model.addAttribute("page", "home");
-		return "home";
-	}
-	
 }
